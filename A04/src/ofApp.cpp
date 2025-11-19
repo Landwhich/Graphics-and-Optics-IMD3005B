@@ -3,7 +3,9 @@
 void ofApp::setup() 
 {
 	ofSetVerticalSync(true);
-    ofSetWindowShape( 1280, 900 );
+    ofSetWindowShape( Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT );
+
+    visualizerState = 0;
 
     // jump to a specific time in our song (good for testing)
     // m_audioAnalyser.setPositionMS( 30 * 1000 ); // 30 seconds in (30000 ms)
@@ -25,81 +27,151 @@ void ofApp::setup()
     m_audioAnalyser.init("lacrimosa.mp3", 40 );
 	m_audioAnalyser.setLoop(true);
 	m_audioAnalyser.play();
+
+    ofEnableDepthTest();
+    m_light.setup();
+    m_light.setPosition(300, 300, 600);
+
+    ofLoadImage(m_violinTexture, "violin_col.png");
+    m_violin.load("violinModelNoStrings.obj");
+    m_string1.load("string1.obj");
+    m_string2.load("string2.obj");
+    m_string3.load("string3.obj");
+    m_string4.load("string4.obj");
+
+    m_string1.disableTextures();
+    m_string2.disableTextures();
+    m_string3.disableTextures();
+    m_string4.disableTextures();
+    m_string1.disableMaterials();
+    m_string2.disableMaterials();
+    m_string3.disableMaterials();
+    m_string4.disableMaterials();
+
 }
 
 void ofApp::update() 
 {
     m_audioAnalyser.update();
+
+    // Get the decibel levels for the frequency bins we are interested 
+    drums = m_audioAnalyser.getLinearAverage( 0 ); 
+    lowV = m_audioAnalyser.getLinearAverage( 3 );
+    highV = m_audioAnalyser.getLinearAverage( 7 );
+    violin = m_audioAnalyser.getLinearAverage( 2 );
 }
 
 
 void ofApp::draw() 
 {
-    ofBackground( ofColor::black );
-	ofSetColor(255);
+        ofBackground( ofColor::black );
+        ofSetColor(255);
 
-    // Volume Level
-    ofSetColor( ofColor::white );
-	ofDrawBitmapString( "Volume Level", 140,  50 );
+    if (!visualizerState){
+        // Volume Level
+        // ofSetColor( ofColor::white );
+        ofDrawBitmapString( "Volume Level", 140,  50 );
 
-    ofDrawCircle( 100, 100, m_audioAnalyser.getLeftLevel()  * 100.0f );
-    ofDrawCircle( 200, 100, m_audioAnalyser.getRightLevel() * 100.0f );
-    ofDrawCircle( 300, 100, m_audioAnalyser.getMixLevel()   * 100.0f );
+        ofDrawCircle( 100, 100, m_audioAnalyser.getLeftLevel()  * 100.0f );
+        ofDrawCircle( 200, 100, m_audioAnalyser.getRightLevel() * 100.0f );
+        ofDrawCircle( 300, 100, m_audioAnalyser.getMixLevel()   * 100.0f );
 
-	ofDrawBitmapString( "Left",  80,  170 );
-	ofDrawBitmapString( "Right", 180, 170 );
-	ofDrawBitmapString( "Mix",   290, 170 );
-
-
-    // Frequency / FFT information
-    m_audioAnalyser.drawWaveform( 40, 300, 1200, 90 );  
-    m_audioAnalyser.drawSpectrum( 40, 460, 1200, 128 );
-
-    m_audioAnalyser.drawLinearAverages( 40, 650, 1200, 128 );
+        ofDrawBitmapString( "Left",  80,  170 );
+        ofDrawBitmapString( "Right", 180, 170 );
+        ofDrawBitmapString( "Mix",   290, 170 );
 
 
-    // Get the decibel levels for the frequency bins we are interested in
-    float drums = m_audioAnalyser.getLinearAverage( 0 ); 
+        // Frequency / FFT information
+        m_audioAnalyser.drawWaveform( 40, 300, 1200, 90 );  
+        m_audioAnalyser.drawSpectrum( 40, 460, 1200, 128 );
 
-    // you can add multiple bins together if you notice that two have activity when there's something you would like to track
-    float lowV = m_audioAnalyser.getLinearAverage( 3 );
-    float highV = m_audioAnalyser.getLinearAverage( 7 );
-    float violin = m_audioAnalyser.getLinearAverage( 2 );
+        m_audioAnalyser.drawLinearAverages( 40, 650, 1200, 128 );
 
-    // Advanced: can also get a custom average for a frequency range if you know the frequencies (can get them from mousing over the full spectrum)
-    // float customAverage = m_audioAnalyser.getAvgForFreqRange( 128.0f, 300.0f );
+        // Advanced: can also get a custom average for a frequency range if you know the frequencies (can get them from mousing over the full spectrum)
+        // float customAverage = m_audioAnalyser.getAvgForFreqRange( 128.0f, 300.0f );
 
-    // Draw circles to indicate activity in the frequency ranges we are interested in
-    // Must be remapped using the ranges of activity that we want
-    m_circle1Brightness = ofMap( drums, 5.0f, 200.0f, 0.0f, 1.0f, true );
-    m_circle2Brightness = ofMap( lowV, 0.0f, 100.0f, 0.0f, 1.0f, true );
-    m_circle3Brightness = ofMap( highV, 0.0f, 100.0f, 0.0f, 1.0f, true );
-    m_circle4Brightness = ofMap( violin, 5.0f, 50.0f, 0.0f, 1.0f, true );
+        // Draw circles to indicate activity in the frequency ranges we are interested in
+        // Must be remapped using the ranges of activity that we want
+        m_circle1Brightness = ofMap( drums, 5.0f, 200.0f, 0.0f, 1.0f, true );
+        m_circle2Brightness = ofMap( lowV, 0.0f, 100.0f, 0.0f, 1.0f, true );
+        m_circle3Brightness = ofMap( highV, 0.0f, 100.0f, 0.0f, 1.0f, true );
+        m_circle4Brightness = ofMap( violin, 5.0f, 50.0f, 0.0f, 1.0f, true );
 
-    // Draw circles to indicate activity in the frequency ranges we are interested in
-    ofSetColor( ofFloatColor( m_circle1Brightness, 0.0f, 0.0f ) );
-    ofDrawCircle( 500, 100, 50 );
+        // Draw circles to indicate activity in the frequency ranges we are interested in
+        ofSetColor( ofFloatColor( m_circle1Brightness, 0.0f, 0.0f ) );
+        ofDrawCircle( 500, 100, 50 );
 
-    ofSetColor( ofFloatColor( 0.0f, m_circle2Brightness, 0.0f ) );
-    ofDrawCircle( 650, 100, 50 );
+        ofSetColor( ofFloatColor( 0.0f, m_circle2Brightness, 0.0f ) );
+        ofDrawCircle( 650, 100, 50 );
 
-    ofSetColor( ofFloatColor( 0.0f, 0.0f, m_circle3Brightness ) );
-    ofDrawCircle( 800, 100, 50 );
+        ofSetColor( ofFloatColor( 0.0f, 0.0f, m_circle3Brightness ) );
+        ofDrawCircle( 800, 100, 50 );
 
-    ofSetColor( ofFloatColor( m_circle4Brightness, m_circle4Brightness, m_circle4Brightness ) );
-    ofDrawCircle( 950, 100, 50 );
+        ofSetColor( ofFloatColor( m_circle4Brightness, m_circle4Brightness, m_circle4Brightness ) );
+        ofDrawCircle( 950, 100, 50 );
 
-    ofSetColor( ofColor::white );
-    ofDrawBitmapString( "Drum and Brass", 445, 200 );
-    ofDrawBitmapString( "Low Vocals", 610, 200 );
-    ofDrawBitmapString( "High Vocals", 760, 200 );
-    ofDrawBitmapString( "Strings", 925, 200 );
+        ofSetColor( ofColor::white );
+        ofDrawBitmapString( "Drum and Brass", 445, 200 );
+        ofDrawBitmapString( "Low Vocals", 610, 200 );
+        ofDrawBitmapString( "High Vocals", 760, 200 );
+        ofDrawBitmapString( "Strings", 925, 200 );
 
-    // song time in seconds. Can use m_soundPlayer.setPositionMS( time ) to jump to a specific time
-    float songTimeSeconds = m_audioAnalyser.getPositionMS() / 1000.0f;
-	ofDrawBitmapString( "Song time: " + ofToString( songTimeSeconds ), 40, 250 );
+        // song time in seconds. Can use m_soundPlayer.setPositionMS( time ) to jump to a specific time
+        float songTimeSeconds = m_audioAnalyser.getPositionMS() / 1000.0f;
+        ofDrawBitmapString( "Song time: " + ofToString( songTimeSeconds ), 40, 250 );
+    }
+
+    else if (visualizerState){
+        ofSetColor(0);
+        ofEnableDepthTest();
+        m_camera.begin();
+        m_light.enable();
+
+        ofPushMatrix();
+            ofRotateDeg(130, 1, 0, 0);
+            ofScale(3);
+            ofTranslate(0, 10 ,10);
+            m_violinTexture.bind();
+            m_violin.drawFaces();
+            m_violinTexture.unbind();
+            ofScale(.8);
+            ofTranslate(-7, 10, 10);
+
+            ofSetColor(0);
+            if (drums > 11.0f){
+                ofSetColor(255, 0, 0);
+            }
+            m_string4.drawFaces();
+            ofSetColor(0);
+
+            if (lowV > 5.0f){
+                ofSetColor(255, 255, 0);
+            }
+            m_string3.drawFaces();
+            ofSetColor(0);
+
+            if (highV > 2.5f){
+                ofSetColor(0, 255, 255);
+            }
+            m_string2.drawFaces();
+            ofSetColor(0);
+
+            if (violin > 2.0f){
+                ofSetColor(255, 0, 255);
+            }
+            m_string1.drawFaces();
+
+        ofPopMatrix();
+
+        m_light.disable();
+        m_camera.end();
+        ofDisableDepthTest();
+    }
+    
 }
 
 void ofApp::keyPressed(int key) {
-	//hmm wonder what kind of useful shortcuts we could add here to go through song more easily ... look at methods of AudioAnalyser ...
+	if (key == ' '){
+        visualizerState = !visualizerState;
+    }
 }

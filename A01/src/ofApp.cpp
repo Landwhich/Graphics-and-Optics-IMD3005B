@@ -2,6 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	//Shaders
 	if(ofIsGLProgrammableRenderer()){
 		shader.load("shadersGL3/shader");
 	}else{
