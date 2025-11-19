@@ -4,6 +4,7 @@
 #include "AudioAnalyser.h"
 #include "Constants.h"
 #include "ofxAssimpModelLoader.h"
+// #include "ofTrueTypeFont"
 
 class ofApp : public ofBaseApp {
 public:
@@ -22,6 +23,16 @@ public:
     float lowV;
     float highV;
     float violin;
+
+    // check if ranges are on for game points and effects
+    bool drumsPlaying;
+    bool lowVPlaying;
+    bool highVPlaying;
+    bool violinPlaying;
+
+    ofTrueTypeFont bearDays;
+    float totalScore;
+    float songTimeSeconds;
 
 	void setup();
 	void update();

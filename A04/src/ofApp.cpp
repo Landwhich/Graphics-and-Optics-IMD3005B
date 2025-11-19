@@ -5,7 +5,18 @@ void ofApp::setup()
 	ofSetVerticalSync(true);
     ofSetWindowShape( Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT );
 
-    visualizerState = 0;
+    visualizerState = false;
+
+    drumsPlaying = false;
+    lowVPlaying = false;
+    highVPlaying = false;
+    violinPlaying = false;
+
+    totalScore = 0.0f;
+    songTimeSeconds = 0.0f;
+
+    bearDays.load("fonts/BearDays.ttf", 92);
+
 
     // jump to a specific time in our song (good for testing)
     // m_audioAnalyser.setPositionMS( 30 * 1000 ); // 30 seconds in (30000 ms)
@@ -48,6 +59,10 @@ void ofApp::setup()
     m_string3.disableMaterials();
     m_string4.disableMaterials();
 
+    // Lock cam in place
+    // m_camera.setRotationSensitivity(0, 0, 0);
+    // m_camera.setScale(1);
+    // m_camera.setTranslationSensitivity(0, 0, 0);
 }
 
 void ofApp::update() 
@@ -59,17 +74,26 @@ void ofApp::update()
     lowV = m_audioAnalyser.getLinearAverage( 3 );
     highV = m_audioAnalyser.getLinearAverage( 7 );
     violin = m_audioAnalyser.getLinearAverage( 2 );
+
+    songTimeSeconds = m_audioAnalyser.getPositionMS() / 1000.0f;
+
+    (drums > 11.0f) ? drumsPlaying = true : drumsPlaying = false;
+    (lowV > 5.0f) ? lowVPlaying = true : lowVPlaying = false;
+    (highV > 2.5f) ? highVPlaying = true : highVPlaying = false;
+    (violin > 2.0f) ? violinPlaying = true : violinPlaying = false;
+
+    if (totalScore < 0) totalScore = 0;
 }
 
 
 void ofApp::draw() 
 {
-        ofBackground( ofColor::black );
-        ofSetColor(255);
+    ofBackground(5);
+    ofSetColor(255);
 
     if (!visualizerState){
         // Volume Level
-        // ofSetColor( ofColor::white );
+        ofSetColor( ofColor::white );
         ofDrawBitmapString( "Volume Level", 140,  50 );
 
         ofDrawCircle( 100, 100, m_audioAnalyser.getLeftLevel()  * 100.0f );
@@ -117,13 +141,13 @@ void ofApp::draw()
         ofDrawBitmapString( "Strings", 925, 200 );
 
         // song time in seconds. Can use m_soundPlayer.setPositionMS( time ) to jump to a specific time
-        float songTimeSeconds = m_audioAnalyser.getPositionMS() / 1000.0f;
         ofDrawBitmapString( "Song time: " + ofToString( songTimeSeconds ), 40, 250 );
     }
 
     else if (visualizerState){
         ofSetColor(0);
         ofEnableDepthTest();
+        ofEnableLighting();
         m_camera.begin();
         m_light.enable();
 
@@ -137,35 +161,26 @@ void ofApp::draw()
             ofScale(.8);
             ofTranslate(-7, 10, 10);
 
-            ofSetColor(0);
-            if (drums > 11.0f){
-                ofSetColor(255, 0, 0);
-            }
+            (drums > 11.0f) ? ofSetColor(255, 0, 0) : ofSetColor(0);
             m_string4.drawFaces();
-            ofSetColor(0);
 
-            if (lowV > 5.0f){
-                ofSetColor(255, 255, 0);
-            }
+            (lowV > 5.0f) ? ofSetColor(255, 255, 0) : ofSetColor(0);
             m_string3.drawFaces();
-            ofSetColor(0);
 
-            if (highV > 2.5f){
-                ofSetColor(0, 255, 255);
-            }
+            (highV > 2.5f) ? ofSetColor(0, 255, 255) : ofSetColor(0);
             m_string2.drawFaces();
-            ofSetColor(0);
 
-            if (violin > 2.0f){
-                ofSetColor(255, 0, 255);
-            }
+            (violin > 2.0f) ? ofSetColor(255, 0, 255) : ofSetColor(0);
             m_string1.drawFaces();
-
         ofPopMatrix();
 
         m_light.disable();
+        ofDisableLighting();
         m_camera.end();
         ofDisableDepthTest();
+
+        ofSetColor(255, ofMap(totalScore, 0.0, 100.0f, 255.0, 0.0, true), ofMap(totalScore, 0.0, 100.0f, 255.0, 0.0, true));
+        bearDays.drawString("Score: " + ofToString((int)totalScore), Constants::WINDOW_WIDTH/2 - bearDays.stringWidth("Score: " + ofToString((int)totalScore))/2, Constants::WINDOW_HEIGHT*0.15);
     }
     
 }
@@ -173,5 +188,11 @@ void ofApp::draw()
 void ofApp::keyPressed(int key) {
 	if (key == ' '){
         visualizerState = !visualizerState;
+    }
+    if (visualizerState){
+        if (key == '1') (drumsPlaying) ? totalScore = (totalScore += 10.0f) * 1.25 : totalScore -= 0.0f;
+        if (key == '2') (lowVPlaying) ? totalScore = (totalScore += 3.0f) * 1.0125 : totalScore -= 25.0f;
+        if (key == '3') (highVPlaying) ? totalScore = (totalScore += 5.0f) * 1.05 : totalScore -= 15.0f;
+        if (key == '4') (violinPlaying) ? totalScore = (totalScore += 3.0f) * 1.0125 : totalScore -= 35.0f;
     }
 }
