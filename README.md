@@ -3,6 +3,11 @@ Here is where I'll contain all my projects for IMD3005B, a class focused on fund
 
 <u>the repository should be cloned inside of:</u> ``` /of_<version number>_<system>_release/apps/ ```
 
+### Assignment 4 - Violin Hero feat. Lacrimosa and FFT
+ <p>A very poor 3D guitar hero clone feat. Lacrimosa. It is using OpenFrameworks in additon to some custom library code that utlizes the FFT to isolate various instruments. The idea is to tap on the buttons 1 (drums), 2 (low Vocals), 3 (high Vocals), and 4(violin) in time with the actual playing of the instrument.</p>
+
+[![Video Title](https://img.youtube.com/vi/2NODa9cO6kc/0.jpg)](https://youtu.be/2NODa9cO6kc) 
+
 ### Assignment 3 - 3D Motion Controls
  <p>OpenCV 3D motion controls for custom models, complete with "PS Move"-esque controllers soldered up for the project</p>
 <img width="480px" src="https://raw.githubusercontent.com/Landwhich/IMD3005B/refs/heads/main/readmeAssets/A03.png">
@@ -17,4 +22,3 @@ Here is where I'll contain all my projects for IMD3005B, a class focused on fund
     <source src="readmeAssets/A01.mp4" type="video/mp4">
 </video> -->
 <img width="480px" src="https://raw.githubusercontent.com/Landwhich/IMD3005B/refs/heads/main/readmeAssets/A01.png">
-
