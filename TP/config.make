@@ -61,7 +61,7 @@ OF_ROOT = ../../..
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_EXCLUSIONS =
+PROJECT_EXCLUSIONS += $(PROJECT_ROOT)/src/arduino_flight_controller%
 
 ################################################################################
 # PROJECT LINKER FLAGS
