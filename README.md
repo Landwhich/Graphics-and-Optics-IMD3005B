@@ -9,8 +9,8 @@ Here is where I'll contain all my projects for IMD3005B, a class focused on fund
 [![Video Title](https://img.youtube.com/vi/IhwYlVk0Sgw/0.jpg)](https://youtu.be/IhwYlVk0Sgw) 
 <br>
 <div style="display:flex">
-    <img width="50%" src="https://raw.githubusercontent.com/Landwhich/IMD3005B/refs/heads/main/readmeAssets/TP_controller.JPG">
-    <img width="50%" src="https://raw.githubusercontent.com/Landwhich/IMD3005B/refs/heads/main/readmeAssets/TP_demo.png">
+    <img width="320px" src="https://raw.githubusercontent.com/Landwhich/IMD3005B/refs/heads/main/readmeAssets/TP_controller.JPG">
+    <img width="320px" src="https://raw.githubusercontent.com/Landwhich/IMD3005B/refs/heads/main/readmeAssets/TP_demo.png">
 </div>
 
 ### Assignment 4 - Violin Hero feat. Lacrimosa and FFT
