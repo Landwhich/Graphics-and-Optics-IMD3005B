@@ -8,10 +8,9 @@ Here is where I'll contain all my projects for IMD3005B, a class focused on fund
 
 [![Video Title](https://img.youtube.com/vi/IhwYlVk0Sgw/0.jpg)](https://youtu.be/IhwYlVk0Sgw) 
 <br>
-<div style="display:flex">
-    <img width="320px" src="https://raw.githubusercontent.com/Landwhich/IMD3005B/refs/heads/main/readmeAssets/TP_controller.JPG">
-    <img width="320px" src="https://raw.githubusercontent.com/Landwhich/IMD3005B/refs/heads/main/readmeAssets/TP_demo.png">
-</div>
+| Controller | Demo |
+|-----------|-------|
+| <img src="https://raw.githubusercontent.com/Landwhich/IMD3005B/refs/heads/main/readmeAssets/TP_controller.JPG" width="320"> | <img src="https://raw.githubusercontent.com/Landwhich/IMD3005B/refs/heads/main/readmeAssets/TP_demo.png" width="320"> |
 
 ### Assignment 4 - Violin Hero feat. Lacrimosa and FFT
  <p>A very poor 3D guitar hero clone feat. Lacrimosa. It is using OpenFrameworks in additon to some custom library code that utlizes the FFT to isolate various instruments. The idea is to tap on the buttons 1 (drums), 2 (low Vocals), 3 (high Vocals), and 4(violin) in time with the actual playing of the instrument.</p>
