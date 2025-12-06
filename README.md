@@ -3,6 +3,16 @@ Here is where I'll contain all my projects for IMD3005B, a class focused on fund
 
 <u>the repository should be cloned inside of:</u> ``` /of_<version number>_<system>_release/apps/ ```
 
+### Term Project - Flight Sim with Controller
+ <p>Custom built controller using an Arduino Uno and MPU 6500 with an accompanying flight simulator to test it on</p>
+
+[![Video Title](https://img.youtube.com/vi/IhwYlVk0Sgw/0.jpg)](https://youtu.be/IhwYlVk0Sgw) 
+<br>
+<div style="display:flex">
+    <img width="50%" src="https://raw.githubusercontent.com/Landwhich/IMD3005B/refs/heads/main/readmeAssets/TP_controller.JPG">
+    <img width="50%" src="https://raw.githubusercontent.com/Landwhich/IMD3005B/refs/heads/main/readmeAssets/TP_demo.png">
+</div>
+
 ### Assignment 4 - Violin Hero feat. Lacrimosa and FFT
  <p>A very poor 3D guitar hero clone feat. Lacrimosa. It is using OpenFrameworks in additon to some custom library code that utlizes the FFT to isolate various instruments. The idea is to tap on the buttons 1 (drums), 2 (low Vocals), 3 (high Vocals), and 4(violin) in time with the actual playing of the instrument.</p>
 
